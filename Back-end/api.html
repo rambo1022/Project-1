@@ -7,8 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
-
+ 
 <body>
+    
     <!-- Artist Select Box -->
     <form id="stock-form">
 
@@ -24,14 +25,15 @@
 
     <!-- Artist Information -->
     <div id="stock-div"></div>
-
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
         function searchStocks(stock) {
+            
             var settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/get-detail?region=US&lang=en&symbol=NBEV",
+                "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/get-detail" +"?region=US&lang=en&symbol="+ inputStock,
                 "method": "GET",
                 "headers": {
                     "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
@@ -51,7 +53,7 @@
             $("#select-stock").on("click", function (event) {
                 // Preventing the button from trying to submit the form
                 event.preventDefault();
-                // Storing the artist name
+                // Storing the stock name
                 var inputStock = $("#stock-input").val().trim();
 
                 // Running the searchBandsInTown function(passing in the artist as an argument)
