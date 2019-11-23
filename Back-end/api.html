@@ -7,9 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
- 
+
 <body>
-    
+
     <!-- Artist Select Box -->
     <form id="stock-form">
 
@@ -25,40 +25,44 @@
 
     <!-- Artist Information -->
     <div id="stock-div"></div>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
-        function searchStocks(stock) {
-            
+           $("#select-stock").on("click", function (event) {
+                // Preventing the button from trying to submit the form
+                event.preventDefault();
+                // Storing the stock name
+                var inputStock = $("#stock-input").val().trim().toUpperCase()
+                
+                // Running the searchStocks function(passing in the symbol as an argument)
+                searchStocks(inputStock);
+                console.log(inputStock);
+            });
+        function searchStocks(inputStock) {
+
             var settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/get-detail" +"?region=US&lang=en&symbol="+ inputStock,
+                "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/get-detail" + "?region=US&lang=en&symbol=" + inputStock,
                 "method": "GET",
                 "headers": {
                     "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
                     "x-rapidapi-key": "ea9381a499msh1c1d7c0f469c737p179f05jsnd2f7d7ffd270"
                 }
             }
-
+            
             $.ajax(settings).done(function (response) {
-                console.log(response);
-                var symbolName = $("<h1>").text(response.symbol);
-                var symbolPrice = $("<h2>").text(response);
-                $("#stock-div").empty();
+                console.log(response.quoteData[inputStock]);
+            
+                var symbolName = $("<h1>").text(response.quoteData[inputStock].longName);
+                var symbolPrice = $("<h2>").text(response.quoteData[inputStock].regularMarketPrice.raw);
+                
+                $("#stock-div").empty(); 
                 $("#stock-div").append(symbolName, symbolPrice);
-
+               
             });
 
-            $("#select-stock").on("click", function (event) {
-                // Preventing the button from trying to submit the form
-                event.preventDefault();
-                // Storing the stock name
-                var inputStock = $("#stock-input").val().trim();
-
-                // Running the searchBandsInTown function(passing in the artist as an argument)
-                searchStocks(inputStock);
-            });
+     
         }
     </script>
 </body>
