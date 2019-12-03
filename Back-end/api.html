@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="css/css.css">
 </head>
 
 <body>
@@ -38,135 +39,215 @@
             </div>
         </div>
 
-        <div class="col-sm-3">
-            <div id="header-div"></div>
-            <h1>Options Heatmap</h1>
-            <div id="options-div">
-            </div>
-        </div>
+
         <!-- Options HeatMap -->
-        <table cellpadding="0" cellspacing="0" border="1" class="heat-map">
-            <thead>
-                <tr>
-                    <th class="first" id = "stock-name"></th>
-                    <th>data 1</th>
-                    <th>data 2</th>
-                    <th>data 3</th>
-                    <th>data 4</th>
-                    <th>data 5</th>
-                    <th class="last">data 6</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="stats-row" >
-                    <td class="stats-title">Wanda</td>
-                    <td id = "calloptions"></td>
-                  
-                </tr>
-                <tr class="stats-row">
-                    <td class="stats-title">Wanda</td>
-                    <td ></td>
-                  
-                </tr>
-                <tr class="stats-row">
-                    <td class="stats-title">Wanda</td>
-                    <td></td>
-                   
-                </tr>
-                <tr class="stats-row">
-                    <td class="stats-title">Wanda</td>
-                    <td></td>
-                  
-                </tr>
-
-            </tbody>
-        </table>
-
-        <!-- JQuery -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script type="text/javascript">
 
 
-            $("#select-stock").on("click", function (event) {
-                // Preventing the button from trying to submit the form
-                event.preventDefault();
-                // Storing the stock name
-                var inputStock = $("#stock-input").val().trim().toUpperCase()
+        <div class="container">
+            <div class="row">
+                <table style="float: left;" style="display: inline-block;" cellpadding="0" cellspacing="0" border="1"
+                    class="heat-map">
+                    <thead>
+                        <tr>
+                            <th>IV</th>
+                            <th>Calls</th>
+                            <th>Strike</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="IVC"></td>
+                            <td id="calloptions"></td>
+                            <td id="strike-price"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <table style="float: right;" style="display: inline-block;" cellpadding="0" cellspacing="0" border="1">
+                <thead>
+                    <tr>
+                        <th>Strike</th>
+                        <th>Puts</th>
+                        <th>IV</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="strike-priceP"></td>
+                        <td id="putoptions"></td>
+                        <td id="IV"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
 
-                // Running the searchStocks function(passing in the symbol as an argument)
-                searchStocks(inputStock);
-                getOptions(inputStock);
-                console.log(inputStock);
+
+
+
+    <!-- JQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+
+        $("#select-stock").on("click", function (event) {
+            // Preventing the button from trying to submit the form
+            event.preventDefault();
+            // Storing the stock name
+            var inputStock = $("#stock-input").val().trim().toUpperCase()
+
+            // Running the searchStocks function(passing in the symbol as an argument)
+            searchStocks(inputStock);
+            getOptions(inputStock);
+            console.log(inputStock);
+        });
+        function searchStocks(inputStock) {
+            //Yahoo Finance Api
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/get-detail" + "?region=US&lang=en&symbol=" + inputStock,
+                "method": "GET",
+                "headers": {
+                    "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
+                    "x-rapidapi-key": "ea9381a499msh1c1d7c0f469c737p179f05jsnd2f7d7ffd270"
+                }
+            }
+
+            $.ajax(settings).done(function (response) {
+                console.log(response.quoteData[inputStock]);
+
+                var symbolName = $("<h1>").text(response.quoteData[inputStock].longName);
+                var symbolPrice = $("<h2>").text(response.quoteData[inputStock].regularMarketPrice.raw);
+
+                $("#stock-div").empty();
+                $("#stock-div").append(symbolName, symbolPrice);
+
             });
-            function searchStocks(inputStock) {
-                //Yahoo Finance Api
-                var settings = {
-                    "async": true,
-                    "crossDomain": true,
-                    "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/get-detail" + "?region=US&lang=en&symbol=" + inputStock,
-                    "method": "GET",
-                    "headers": {
-                        "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
-                        "x-rapidapi-key": "ea9381a499msh1c1d7c0f469c737p179f05jsnd2f7d7ffd270"
-                    }
+        }
+
+
+
+        //Options 
+        function getOptions(inputStock) {
+            //Yahoo Finance Api
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-options?symbol=" + inputStock + "&date=1575590400",
+                "method": "GET",
+                "headers": {
+                    "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
+                    "x-rapidapi-key": "ea9381a499msh1c1d7c0f469c737p179f05jsnd2f7d7ffd270"
+                }
+            }
+            //Sets the first box in the Table to the name of the Stock
+            $("#stock-name").text(inputStock)
+            $.ajax(settings).done(function (response) {
+                var call = response.contracts['calls'];
+                console.log(response);
+                console.log(response.contracts['calls']['0']);
+                //Creates an array based of the list of option calls
+                var optionsarray = Array.from(response.contracts['calls']);
+
+                $("#calloptions").empty();
+                var CallOptionsList = $("<h2>").text(response.contracts['calls']['0']['lastPrice']);
+                for (var i = 0; i < optionsarray.length; i++) {
+                    var td = $("<td>");
+                    var addTD = $("#calloptions").add(td);
+                    var CallOptions = $("<h2>").text(optionsarray[i]['lastPrice']['fmt']);
+                    $("#calloptions").append(CallOptions);
+                }
+                console.log(optionsarray.length);
+
+
+
+            });
+            $.ajax(settings).done(function (response) {
+
+                //Creates an array based of the list of option calls
+
+                var optionsarray = Array.from(response.contracts['puts']);
+                $("#IV").empty();
+                for (var i = 0; i < optionsarray.length; i++) {
+                    var td = $("<td>");
+                    var addTD = $("#IV").add(td);
+                    var IV = $("<h2>").text(optionsarray[i]['impliedVolatility']['fmt']);
+                    $("#IV").append(IV);
+                }
+                console.log(optionsarray.length);
+                console.log(IV)
+            });
+            $.ajax(settings).done(function (response) {
+
+                //Creates an array based of the list of option calls
+
+                var optionsarray = Array.from(response.contracts['calls']);
+                $("#IVC").empty();
+                for (var i = 0; i < optionsarray.length; i++) {
+                    var td = $("<td>").add($("#CallsHeat" + [i] + ""));
+                    var addTD = $("#IVC").add(td);
+                    var IV = $("<h2>").text(optionsarray[i]['impliedVolatility']['fmt']);
+                    $("#IVC").append(IV);
+                }
+                console.log(optionsarray.length);
+                console.log(IV)
+            });
+            $.ajax(settings).done(function (response) {
+                var put = response.contracts['puts']
+                console.log(response)
+                console.log(response.contracts['puts']['0'])
+                //Creates an array based of the list of option calls
+                var optionsarrayC = Array.from(response.contracts['calls']);
+                var optionsarray = Array.from(response.contracts['puts']);
+                $("#putoptions").empty();
+                if (optionsarray > optionsarrayC) {
+                    optionsarray.length = optionsarrayC.length
                 }
 
-                $.ajax(settings).done(function (response) {
-                    console.log(response.quoteData[inputStock]);
-
-                    var symbolName = $("<h1>").text(response.quoteData[inputStock].longName);
-                    var symbolPrice = $("<h2>").text(response.quoteData[inputStock].regularMarketPrice.raw);
-
-                    $("#stock-div").empty();
-                    $("#stock-div").append(symbolName, symbolPrice);
-
-                });
-            }
-
-
-
-            //Options 
-            function getOptions(inputStock) {
-                //Yahoo Finance Api
-                var settings = {
-                    "async": true,
-                    "crossDomain": true,
-                    "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-options?symbol=" + inputStock + "&date=1575590400",
-                    "method": "GET",
-                    "headers": {
-                        "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
-                        "x-rapidapi-key": "ea9381a499msh1c1d7c0f469c737p179f05jsnd2f7d7ffd270"
-                    }
+                for (var i = 0; i < optionsarray.length; i++) {
+                    var td = $("<td>").add($("#PutsHeat" + [i] + ""));
+                    var addTD = $("#putoptions").add(td);
+                    var PutOptions = $("<h2>").text(optionsarray[i]['lastPrice']['raw']);
+                    $("#putoptions").append(PutOptions);
                 }
-                //Sets the first box in the Table to the name of the Stock
-                $("#stock-name").text(inputStock)
-                $.ajax(settings).done(function (response) {
-                    var call = response.contracts['calls']
-                    console.log(response)
-                    console.log(response.contracts['calls']['0'])
-                    //Creates an array based of the list of option calls
-                    var optionsarray = Array.from(response.contracts['calls']);
-                   
-
-                    console.log(optionsarray[u]['lastPrice']['raw'])
-                    $("#options-div").empty();
-
-                    var CallOptionsList = $("<h2>").text(response.contracts['calls']['0']['lastPrice']);
-                    for (var i = 0; i < optionsarray.length; i++) {
-                        var td = $("<td>")
-                        var addTD = $("#calloptions").add(td) 
-                        var CallOptions = $("<h2>").text(optionsarray[i]['lastPrice']['raw']);
-                        $("#calloptions").append(CallOptions)
-
-                    }
-                    console.log(optionsarray.length)
+                console.log(optionsarray.length);
+            });
+            $.ajax(settings).done(function (response) {
 
 
+                //Creates an array based of the list of option calls
 
-                });
-            }
+                var optionsarray = Array.from(response.contracts['calls']);
+                $("#strike-price").empty();
+                for (var i = 0; i < optionsarray.length; i++) {
+                    var td = $("<td>").add($("#CallsHeat" + [i] + ""));
+                    var addTD = $("#strike-price").add(td);
+                    var StrikePrice = $("<h2>").text(optionsarray[i]['strike']['fmt']);
+                    $("#strike-price").append(StrikePrice);
+                }
+                console.log(StrikePrice)
+                console.log(optionsarray.length);
+            });
+            $.ajax(settings).done(function (response) {
 
-        </script>
+
+                //Creates an array based of the list of option calls
+
+                var optionsarray = Array.from(response.contracts['puts']);
+                $("#strike-priceP").empty();
+                for (var i = 0; i < optionsarray.length; i++) {
+                    var td = $("<td>").add($("#PutsHeat" + [i] + ""));
+                    var addTD = $("#strike-priceP").add(td);
+                    var StrikePrice = $("<h2>").text(optionsarray[i]['strike']['fmt']);
+                    $("#strike-priceP").append(StrikePrice);
+                }
+                console.log(optionsarray.length);
+            });
+        }
+
+    </script>
     </div>
 </body>
 
