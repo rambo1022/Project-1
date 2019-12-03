@@ -96,7 +96,6 @@
             event.preventDefault();
             // Storing the stock name
             var inputStock = $("#stock-input").val().trim().toUpperCase()
-
             // Running the searchStocks function(passing in the symbol as an argument)
             searchStocks(inputStock);
             getOptions(inputStock);
@@ -126,9 +125,6 @@
 
             });
         }
-
-
-
         //Options 
         function getOptions(inputStock) {
             //Yahoo Finance Api
@@ -160,9 +156,6 @@
                     $("#calloptions").append(CallOptions);
                 }
                 console.log(optionsarray.length);
-
-
-
             });
             $.ajax(settings).done(function (response) {
 
@@ -245,8 +238,32 @@
                 }
                 console.log(optionsarray.length);
             });
-        }
+            $.ajax(settings).done(function (response) {
 
+
+                //Creates an array based of the list of option calls
+
+                var optionsarray = Array.from(response.contracts['puts']);
+                for (var i = 0; i < optionsarray.length; i++) {
+                    var iOld = i;
+                    if (i - 1 > 0) {
+                         iOld = i -1
+                    } else {
+                         iOld = i
+                    
+                    }
+                    var OI = (optionsarray[i]['openInterest']['fmt']);
+                    var OIold = (optionsarray[iOld]['openInterest']['fmt']);
+                if (OI < OIold) {
+                    console.log("Works")
+                    $("#PutsHeat"+i+"").add($ )
+                } else {
+                    $("#CallssHeat"+i+"").addClass("GreenHeat")
+                }
+                }
+                console.log(optionsarray.length);
+            });
+        }
     </script>
     </div>
 </body>
