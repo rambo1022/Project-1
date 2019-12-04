@@ -142,126 +142,73 @@
             $("#stock-name").text(inputStock)
             $.ajax(settings).done(function (response) {
                 var call = response.contracts['calls'];
-                console.log(response);
-                console.log(response.contracts['calls']['0']);
-                //Creates an array based of the list of option calls
                 var optionsarray = Array.from(response.contracts['calls']);
+                var optionsarrayP = Array.from(response.contracts['puts']);
 
                 $("#calloptions").empty();
-                var CallOptionsList = $("<h2>").text(response.contracts['calls']['0']['lastPrice']);
-                for (var i = 0; i < optionsarray.length; i++) {
-                    var td = $("<td>");
-                    var addTD = $("#calloptions").add(td);
-                    var CallOptions = $("<h2>").text(optionsarray[i]['lastPrice']['fmt']);
-                    $("#calloptions").append(CallOptions);
-                }
-                console.log(optionsarray.length);
-            });
-            $.ajax(settings).done(function (response) {
-
-                //Creates an array based of the list of option calls
-
-                var optionsarray = Array.from(response.contracts['puts']);
                 $("#IV").empty();
-                for (var i = 0; i < optionsarray.length; i++) {
-                    var td = $("<td>");
-                    var addTD = $("#IV").add(td);
-                    var IV = $("<h2>").text(optionsarray[i]['impliedVolatility']['fmt']);
-                    $("#IV").append(IV);
-                }
-                console.log(optionsarray.length);
-                console.log(IV)
-            });
-            $.ajax(settings).done(function (response) {
-
-                //Creates an array based of the list of option calls
-
-                var optionsarray = Array.from(response.contracts['calls']);
                 $("#IVC").empty();
-                for (var i = 0; i < optionsarray.length; i++) {
-                    var td = $("<td>").add($("#CallsHeat" + [i] + ""));
-                    var addTD = $("#IVC").add(td);
-                    var IV = $("<h2>").text(optionsarray[i]['impliedVolatility']['fmt']);
-                    $("#IVC").append(IV);
-                }
-                console.log(optionsarray.length);
-                console.log(IV)
-            });
-            $.ajax(settings).done(function (response) {
-                var put = response.contracts['puts']
-                console.log(response)
-                console.log(response.contracts['puts']['0'])
-                //Creates an array based of the list of option calls
-                var optionsarrayC = Array.from(response.contracts['calls']);
-                var optionsarray = Array.from(response.contracts['puts']);
                 $("#putoptions").empty();
-                if (optionsarray > optionsarrayC) {
-                    optionsarray.length = optionsarrayC.length
-                }
-
-                for (var i = 0; i < optionsarray.length; i++) {
-                    var td = $("<td>").add($("#PutsHeat" + [i] + ""));
-                    var addTD = $("#putoptions").add(td);
-                    var PutOptions = $("<h2>").text(optionsarray[i]['lastPrice']['raw']);
-                    $("#putoptions").append(PutOptions);
-                }
-                console.log(optionsarray.length);
-            });
-            $.ajax(settings).done(function (response) {
-
-
-                //Creates an array based of the list of option calls
-
-                var optionsarray = Array.from(response.contracts['calls']);
                 $("#strike-price").empty();
+                $("#strike-priceP").empty();
+
                 for (var i = 0; i < optionsarray.length; i++) {
-                    var td = $("<td>").add($("#CallsHeat" + [i] + ""));
+                    var td = $("<tr>").attr("id","GreenHeat" );
+                    var addTD = $("#calloptions").add(td);
+                    var addTD = $("#IV").add(td);
+                    var addTD = $("#IVC").add(td);
+                    var addTD = $("#putoptions").add(td);
                     var addTD = $("#strike-price").add(td);
+                    var addTD = $("#strike-priceP").add(td);
+                    var CallOptions = $("<h2>").text(optionsarray[i]['lastPrice']['fmt']);
+                    var IVC = $("<h2>").text(optionsarray[i]['impliedVolatility']['fmt']);
                     var StrikePrice = $("<h2>").text(optionsarray[i]['strike']['fmt']);
+                    $("#calloptions").append(CallOptions);
+                    $("#IVC").append(IVC);
                     $("#strike-price").append(StrikePrice);
                 }
-                console.log(StrikePrice)
-                console.log(optionsarray.length);
-            });
-            $.ajax(settings).done(function (response) {
-
-
-                //Creates an array based of the list of option calls
-
-                var optionsarray = Array.from(response.contracts['puts']);
-                $("#strike-priceP").empty();
-                for (var i = 0; i < optionsarray.length; i++) {
-                    var td = $("<td>").add($("#PutsHeat" + [i] + ""));
+                for (var i = 0; i < optionsarrayP.length; i++) {
+                    var td = $("<tr>").attr("id","RedHeat" );
+                    var addTD = $("#IV").add(td);
+                    var addTD = $("#putoptions").add(td);
                     var addTD = $("#strike-priceP").add(td);
-                    var StrikePrice = $("<h2>").text(optionsarray[i]['strike']['fmt']);
-                    $("#strike-priceP").append(StrikePrice);
+                    console.log(optionsarrayP.length)
+                    var IV = $("<h2>").text(optionsarrayP[i]['impliedVolatility']['fmt']);
+                    console.log(optionsarrayP[i])
+                    var PutOptions = $("<h2>").text(optionsarrayP[i]['lastPrice']['raw']);
+                    var StrikePriceP = $("<h2>").text(optionsarrayP[i]['strike']['fmt']);
+                    $("#IV").append(IV);
+                    $("#putoptions").append(PutOptions);
+                    $("#strike-priceP").append(StrikePriceP);
                 }
-                console.log(optionsarray.length);
             });
+
             $.ajax(settings).done(function (response) {
 
 
                 //Creates an array based of the list of option calls
 
                 var optionsarray = Array.from(response.contracts['puts']);
+
                 for (var i = 0; i < optionsarray.length; i++) {
                     var iOld = i;
                     if (i - 1 > 0) {
-                         iOld = i -1
+                        iOld = i - 1
                     } else {
-                         iOld = i
-                    
+                        iOld = i
                     }
+                    console.log(i)
+                    console.log(optionsarray[i]['openInterest']);
                     var OI = (optionsarray[i]['openInterest']['fmt']);
                     var OIold = (optionsarray[iOld]['openInterest']['fmt']);
-                if (OI < OIold) {
-                    console.log("Works")
-                    $("#PutsHeat"+i+"").add($ )
-                } else {
-                    $("#CallssHeat"+i+"").addClass("GreenHeat")
+                    if (OI < OIold) {
+                        console.log("Works")
+                        $("#PutsHeat" + i + "").attr("background-color", "FD0500")
+                    } else {
+                        $("#CallsHeat" + i + "").attr("background-color", "rgb(0, 253, 34)")
+                    }
                 }
-                }
-                console.log(optionsarray.length);
+
             });
         }
     </script>
