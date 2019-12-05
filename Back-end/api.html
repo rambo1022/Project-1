@@ -153,7 +153,7 @@
                 $("#strike-priceP").empty();
 
                 for (var i = 0; i < optionsarray.length; i++) {
-                    var td = $("<tr>").attr("id","GreenHeat" );
+                    var td = $("<tr>").attr("id","HeatIndex"+i);
                     var addTD = $("#calloptions").add(td);
                     var addTD = $("#IV").add(td);
                     var addTD = $("#IVC").add(td);
@@ -168,7 +168,7 @@
                     $("#strike-price").append(StrikePrice);
                 }
                 for (var i = 0; i < optionsarrayP.length; i++) {
-                    var td = $("<tr>").attr("id","RedHeat" );
+                    var td = $("<tr>").attr("id","HeadIndex"+i );
                     var addTD = $("#IV").add(td);
                     var addTD = $("#putoptions").add(td);
                     var addTD = $("#strike-priceP").add(td);
@@ -201,11 +201,15 @@
                     console.log(optionsarray[i]['openInterest']);
                     var OI = (optionsarray[i]['openInterest']['fmt']);
                     var OIold = (optionsarray[iOld]['openInterest']['fmt']);
+                    var NewArray = Array.from($("#putoptions"))
+                    console.log(NewArray)
                     if (OI < OIold) {
                         console.log("Works")
-                        $("#PutsHeat" + i + "").attr("background-color", "FD0500")
+                      
+                        NewArray[i].addClass("RedHeat")
                     } else {
-                        $("#CallsHeat" + i + "").attr("background-color", "rgb(0, 253, 34)")
+                       
+                        NewArray[i].addClass("GreenHeat")
                     }
                 }
 
