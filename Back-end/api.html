@@ -125,6 +125,7 @@
 
             });
         }
+
         //Options 
         function getOptions(inputStock) {
             //Yahoo Finance Api
@@ -153,7 +154,7 @@
                 $("#strike-priceP").empty();
 
                 for (var i = 0; i < optionsarray.length; i++) {
-                    var td = $("<tr>").attr("id","HeatIndex"+i);
+                    var td = $("<tr>").attr("id", "HeatIndex" + i);
                     var addTD = $("#calloptions").add(td);
                     var addTD = $("#IV").add(td);
                     var addTD = $("#IVC").add(td);
@@ -168,7 +169,7 @@
                     $("#strike-price").append(StrikePrice);
                 }
                 for (var i = 0; i < optionsarrayP.length; i++) {
-                    var td = $("<tr>").attr("id","HeadIndex"+i );
+                    var td = $("<tr>").attr("id", "HeadIndex" + i);
                     var addTD = $("#IV").add(td);
                     var addTD = $("#putoptions").add(td);
                     var addTD = $("#strike-priceP").add(td);
@@ -205,16 +206,17 @@
                     console.log(NewArray)
                     if (OI < OIold) {
                         console.log("Works")
-                      
-                        NewArray[i].addClass("RedHeat")
+
+
                     } else {
-                       
-                        NewArray[i].addClass("GreenHeat")
+
                     }
                 }
 
             });
+
         }
+      
     </script>
     </div>
 </body>
