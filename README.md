@@ -1,2 +1,2 @@
 # Project-1
-Create a function stock/financial web-app
+Created a functioning stock/financial ticker and heat map that tracks hot cyrpotcurrency buys
